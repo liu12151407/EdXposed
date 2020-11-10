@@ -29,15 +29,18 @@ namespace edxp {
 
     static constexpr auto kLibArtName = "libart.so";
     static constexpr auto kLibFwkName = "libandroid_runtime.so";
+    static constexpr auto kLibWhaleName = "libwhale.edxp.so";
+    static constexpr auto kLibSandHookName = "libsandhook.edxp.so";
 
     static const auto kLibBasePath = std::string(LP_SELECT("/system/lib/", "/system/lib64/"));
     static const auto kLibRuntimeBasePath = std::string(
             LP_SELECT("/apex/com.android.runtime/lib/", "/apex/com.android.runtime/lib64/"));
 
     static const auto kLibArtPath =
-            (GetAndroidApiLevel() >= ANDROID_Q ? kLibRuntimeBasePath : kLibBasePath) + kLibArtName;
-    static const auto kLibWhalePath = kLibBasePath + "libwhale.edxp.so";
-    static const auto kLibSandHookPath = kLibBasePath + "libsandhook.edxp.so";
+            (GetAndroidApiLevel() >= __ANDROID_API_Q__ ? kLibRuntimeBasePath : kLibBasePath) + kLibArtName;
+
+    static const auto kLibWhalePath = kLibBasePath + kLibWhaleName;
+    static const auto kLibSandHookPath = kLibBasePath + kLibSandHookName;
     static const auto kLibFwPath = kLibBasePath + "libandroidfw.so";
     static const auto kLibDlPath = kLibBasePath + "libdl.so";
     static const auto kLibFwkPath = kLibBasePath + kLibFwkName;

@@ -46,7 +46,7 @@ namespace edxp {
         }
         LOGI("Start to install inline hooks");
         int api_level = GetAndroidApiLevel();
-        if (UNLIKELY(api_level < ANDROID_LOLLIPOP)) {
+        if (UNLIKELY(api_level < __ANDROID_API_L__)) {
             LOGE("API level not supported: %d, skip inline hooks", api_level);
             return;
         }
@@ -66,7 +66,7 @@ namespace edxp {
         }
         hook_func = reinterpret_cast<HookFunType>(hook_func_symbol);
 
-        if (api_level >= ANDROID_P) {
+        if (api_level > __ANDROID_API_P__) {
             ScopedDlHandle dl_handle(kLibDlPath.c_str());
             void *handle = dl_handle.Get();
             HOOK_FUNC(mydlopen, "__loader_dlopen");
@@ -83,7 +83,9 @@ namespace edxp {
         if (art_hooks_installed) {
             return;
         }
-        art::hidden_api::DisableHiddenApi(art_handle, hook_func);
+        if (ConfigManager::GetInstance() -> IsHiddenAPIBypassEnabled()) {
+            art::hidden_api::DisableHiddenApi(art_handle, hook_func);
+        }
         art::Runtime::Setup(art_handle, hook_func);
         art::gc::Heap::Setup(art_handle, hook_func);
         art::ClassLinker::Setup(art_handle, hook_func);
